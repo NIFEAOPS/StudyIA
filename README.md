@@ -16,6 +16,43 @@ mvn spring-boot:run
 
 Sin API key, el backend usa una respuesta local de desarrollo para permitir probar el flujo completo.
 
+## Despliegue en una VM con Docker
+
+La configuración de producción incluye el backend Spring Boot y el frontend React
+en Docker Compose. Caddy sirve el frontend, redirige `/api/*` al backend y
+gestiona HTTPS para `studyia.app`.
+
+En la VM, crea un archivo `.env` junto a `docker-compose.yml` (no lo subas a Git)
+con las credenciales de Cloud SQL y los secretos de producción:
+
+```env
+SPRING_DATASOURCE_URL=jdbc:postgresql://34.23.217.174:5432/studyapp?sslmode=require&connectTimeout=10
+SPRING_DATASOURCE_USERNAME=nicolas
+SPRING_DATASOURCE_PASSWORD=<contraseña-de-Cloud-SQL>
+JWT_SECRET=<secreto-base64-de-al-menos-256-bits>
+STUDYIA_MAIL_ENABLED=true
+MAIL_HOST=<servidor-smtp>
+MAIL_PORT=587
+MAIL_USERNAME=<usuario-smtp>
+MAIL_PASSWORD=<contraseña-smtp>
+OPENAI_API_KEY=<clave-opcional>
+```
+
+Apunta el registro DNS `A` de `studyia.app` a la IP pública estática de la VM,
+abre los puertos 80 y 443 y ejecuta:
+
+```bash
+docker compose up -d --build
+docker compose logs -f
+```
+
+Caddy emitirá y renovará el certificado HTTPS automáticamente. Para actualizar:
+
+```bash
+git pull origin main
+docker compose up -d --build
+```
+
 ## Base de datos Cloud SQL
 
 La configuración de producción usa PostgreSQL en la instancia de Cloud SQL
