@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: studyia-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://34.23.217.174:5432/studyapp?sslmode=require&connectTimeout=10}
+    username: ${SPRING_DATASOURCE_USERNAME:nicolas}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:true}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS:true}
+
+server:
+  port: 8080
+
+studyia:
+  frontend:
+    base-url: ${STUDYIA_FRONTEND_BASE_URL:http://localhost:5173}
+  mail:
+    enabled: ${STUDYIA_MAIL_ENABLED:false}
+    from: ${MAIL_FROM:no-reply@studyia.local}
+  security:
+    jwt-secret: ${JWT_SECRET:c3R1ZHlpYS1kZXZlbG9wbWVudC1qd3Qtc2VjcmV0LTI1Ni1iaXQ=}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900000}
+    refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800000}
+    refresh-cookie-secure: ${JWT_REFRESH_COOKIE_SECURE:false}
+    refresh-cookie-same-site: ${JWT_REFRESH_COOKIE_SAME_SITE:Lax}
+  ai:
+    provider: ${STUDYIA_AI_PROVIDER:openai}
+    api-key: ${OPENAI_API_KEY:}
+    base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+    model: ${OPENAI_MODEL:gpt-4o-mini}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
